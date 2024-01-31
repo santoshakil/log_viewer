@@ -28,16 +28,15 @@ class LogViewer extends StatelessWidget {
       builder: (_, snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         // final lines = const LineSplitter().convert(file.readAsStringSync());
-        return FutureBuilder(
-          future: compute((path) async => (await File(path).readAsLines()).reversed, path),
+        return FutureBuilder<List<String>>(
+          future: compute((path) async => (await File(path).readAsLines()).reversed.toList(), path),
           builder: (_, snapshot) {
             if (snapshot.hasError) return Text('Error: ${snapshot.error}');
             if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-            final lines = snapshot.data as List<String>;
             return ListView.builder(
-              itemCount: lines.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                final line = lines[index];
+                final line = snapshot.data![index];
                 final parts = line.split(' - ');
                 if (parts.length != 3) return Text(line);
                 final time = parts[0];
