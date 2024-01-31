@@ -39,7 +39,7 @@ class LogViewer extends StatelessWidget {
               itemBuilder: (context, index) {
                 final line = lines[index];
                 final parts = line.split(' - ');
-                if (parts.length == 1) return Text(line);
+                if (parts.length != 3) return Text(line);
                 final time = parts[0];
                 final type = parts[1];
                 final message = parts[2];
