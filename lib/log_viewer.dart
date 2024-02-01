@@ -15,6 +15,8 @@ import 'package:flutter/material.dart'
         Text,
         TextStyle,
         Widget;
+import 'package:flutter/src/widgets/basic.dart';
+import 'package:intl/intl.dart';
 
 class LogViewer extends StatelessWidget {
   const LogViewer({super.key, required this.path});
@@ -31,7 +33,7 @@ class LogViewer extends StatelessWidget {
         return FutureBuilder<List<String>>(
           future: compute((path) async => (await File(path).readAsLines()).reversed.toList(), path),
           builder: (_, snapshot) {
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+            if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
             if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
             return ListView.builder(
               itemCount: snapshot.data!.length,
@@ -39,10 +41,15 @@ class LogViewer extends StatelessWidget {
                 final line = snapshot.data![index];
                 final parts = line.split(' - ');
                 if (parts.length != 3) return Text(line);
-                final time = parts[0];
+                final time = DateFormat('dd-MMM-yyyy hh:mm:ss a').format(DateTime.parse(parts[0]));
                 final type = parts[1];
                 final message = parts[2];
-                return Text('$time - $type - $message', style: TextStyle(color: _colorForType(type)));
+                return Row(
+                  children: [
+                    Text('$type: ', style: TextStyle(color: _colorForType(type))),
+                    Text('$time - $message'),
+                  ],
+                );
               },
             );
           },
