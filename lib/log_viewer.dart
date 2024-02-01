@@ -41,7 +41,7 @@ class LogViewer extends StatelessWidget {
                 final line = snapshot.data![index];
                 final parts = line.split(' - ');
                 if (parts.length != 3) return Text(line);
-                final time = DateFormat('dd-MMM-yyyy hh:mm:ss a').format(DateTime.parse(parts[0]));
+                final time = DateFormat('dd-MMM-yyyy hh:mm:ss a').format(DateTime.parse(parts[0]).toLocal());
                 final type = parts[1];
                 final message = parts[2];
                 return Row(
