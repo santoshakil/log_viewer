@@ -45,6 +45,7 @@ class LogViewer extends StatelessWidget {
                 final type = parts[1];
                 final message = parts[2];
                 return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('$type: ', style: TextStyle(color: _colorForType(type))),
                     Expanded(child: Text('$time - $message')),
