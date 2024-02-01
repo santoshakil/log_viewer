@@ -47,7 +47,7 @@ class LogViewer extends StatelessWidget {
                 return Row(
                   children: [
                     Text('$type: ', style: TextStyle(color: _colorForType(type))),
-                    Text('$time - $message'),
+                    Expanded(child: Text('$time - $message')),
                   ],
                 );
               },
