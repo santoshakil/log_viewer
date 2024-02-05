@@ -8,15 +8,17 @@ import 'package:flutter/material.dart'
         CircularProgressIndicator,
         Color,
         Colors,
+        CrossAxisAlignment,
+        Expanded,
         FutureBuilder,
         ListView,
+        Row,
         StatelessWidget,
         StreamBuilder,
         Text,
         TextStyle,
         Widget;
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 class LogViewer extends StatelessWidget {
   const LogViewer({super.key, required this.path});
