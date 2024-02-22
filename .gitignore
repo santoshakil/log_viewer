@@ -49,4 +49,5 @@ app.*.symbols
 app.*.map.json
 
 *.lock
+**/._*
 ._*
