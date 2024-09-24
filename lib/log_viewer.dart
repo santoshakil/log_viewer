@@ -1,6 +1,6 @@
 import 'dart:io' show File;
 
-import 'package:flutter/foundation.dart' show compute;
+import 'package:flutter/foundation.dart' show UniqueKey, compute;
 import 'package:flutter/material.dart'
     show
         BuildContext,
@@ -37,6 +37,7 @@ class LogViewer extends StatelessWidget {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         // final lines = const LineSplitter().convert(file.readAsStringSync());
         return FutureBuilder<List<String>>(
+          key: UniqueKey(),
           future: compute((path) async => (await File(path).readAsLines()).reversed.toList(), path),
           builder: (_, snapshot) {
             if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
