@@ -1,11 +1,9 @@
 import 'dart:io' show File;
 
-import 'package:flutter/foundation.dart' show UniqueKey, compute;
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart'
     show
         BuildContext,
-        Center,
-        CircularProgressIndicator,
         Color,
         Colors,
         CrossAxisAlignment,
@@ -16,6 +14,7 @@ import 'package:flutter/material.dart'
         Icons,
         ListView,
         Row,
+        SizedBox,
         StatelessWidget,
         StreamBuilder,
         Text,
@@ -32,34 +31,28 @@ class LogViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: File(path).watch(),
-      builder: (_, snapshot) {
-        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        // final lines = const LineSplitter().convert(file.readAsStringSync());
+      stream: Stream.periodic(const Duration(seconds: 1)),
+      builder: (_, __) {
         return FutureBuilder<List<String>>(
-          key: UniqueKey(),
-          future: compute((path) async => (await File(path).readAsLines()).reversed.toList(), path),
-          builder: (_, snapshot) {
-            if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
-            if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+          future: compute((p) async => (await File(p).readAsLines()).reversed.toList(), path),
+          builder: (_, v) {
+            if (v.data == null) return const SizedBox.shrink();
             return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final line = snapshot.data![index];
+              itemCount: v.data!.length,
+              itemBuilder: (_, i) {
+                final line = v.data![i];
                 final parts = line.split(' - ');
                 if (parts.length != 3) return Text(line);
                 final time = DateFormat('dd-MMM-yyyy hh:mm:ss a').format(DateTime.parse(parts[0]).toLocal());
                 final type = parts[1];
-                final message = parts[2];
+                final msg = parts[2];
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('$time - $type: ', style: TextStyle(color: _colorForType(type))),
-                    Expanded(child: Text(message)),
+                    Expanded(child: Text(msg)),
                     IconButton(
-                      onPressed: () async => await Clipboard.setData(
-                        ClipboardData(text: message),
-                      ),
+                      onPressed: () async => await Clipboard.setData(ClipboardData(text: msg)),
                       icon: const Icon(Icons.copy),
                     )
                   ],
